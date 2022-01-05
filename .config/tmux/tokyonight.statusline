@@ -1,0 +1,27 @@
+# vim: ft=tmux
+set -g mode-style "fg=#7aa2f7,bg=#3b4261"
+
+set -g message-style "fg=#7aa2f7,bg=#3b4261"
+set -g message-command-style "fg=#7aa2f7,bg=#3b4261"
+
+set -g status "on"
+set -g status-justify "left"
+set -g status-style "none,bg=#1f2335,fg=#a9b1d6"
+
+set -g pane-border-style "fg=#3b4261"
+set -g pane-active-border-style "fg=#7aa2f7"
+
+set -g status-left "#{?client_prefix,#[bg=#9ece6a],#[bg=#7aa2f7]}#[fg=#1d202f,bold]  #S #[default]"
+set -g status-left-length "100"
+set -g status-left-style "none"
+
+set -g status-right "%Y-%m-%d #{?client_prefix,#[fg=#9ece6a],#[fg=#7aa2f7]}#[bg=#414868] %H:%M #{?client_prefix,#[bg=#9ece6a],#[bg=#7aa2f7]}#[fg=#1d202f] #h "
+set -g status-right-length "100"
+set -g status-right-style "none"
+
+setw -g window-status-activity-style "underscore,fg=#a9b1d6,bg=#1f2335"
+setw -g window-status-bell-style "none,fg=#9ece6a"
+setw -g window-status-current-format "#[fg=#7aa2f7,bg=#3b4261,bold] #W "
+setw -g window-status-format " #W "
+setw -g window-status-separator ""
+setw -g window-status-style "NONE,fg=#a9b1d6,bg=#1f2335"

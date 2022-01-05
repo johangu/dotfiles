@@ -1,0 +1,11 @@
+align_table_field: true
+chop_down_table: true
+column_limit: 80
+continuation_indent_width: 2
+double_quote_to_single_quote: true
+indent_width: 2
+keep_simple_control_block_one_line: true
+keep_simple_function_one_line: true
+spaces_inside_table_braces: true
+spaces_around_equals_in_field: true
+tab_width: 2

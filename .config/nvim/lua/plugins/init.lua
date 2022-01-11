@@ -105,6 +105,7 @@ return packer.startup(function(use)
     requires = 'nvim-telescope/telescope.nvim',
     config = function() require'neoclip'.setup {} end
   }
+  use 'mfussenegger/nvim-dap'
 
   -- git
   use {

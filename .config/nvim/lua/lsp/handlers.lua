@@ -39,21 +39,6 @@ local goto_definition = function(split_cmd)
   return handler
 end
 
-local format_async = function(err, result, ctx)
-  if err ~= nil or result == nil then return end
-  if vim.api.nvim_buf_get_var(ctx.bufnr, 'init_changedtick') ==
-    vim.api.nvim_buf_get_var(ctx.bufnr, 'changedtick') then
-    local view = vim.fn.winsaveview()
-    vim.lsp.util.apply_text_edits(result, ctx.bufnr)
-    vim.fn.winrestview(view)
-    if ctx.bufnr == vim.api.nvim_get_current_buf() then
-      vim.b.saving_format = true
-      vim.command('noautocmd :update')
-      vim.b.saving_format = false
-    end
-  end
-end
-
 local function register_commands()
   vim.cmd('command! LspDef lua vim.lsp.buf.definition()')
   vim.cmd('command! LspDeclaration lua vim.lsp.buf.declaration()')
@@ -66,11 +51,11 @@ local function register_commands()
   vim.cmd('command! LspTypeDef lua vim.lsp.buf.type_definition()')
   vim.cmd('command! LspImplementation lua vim.lsp.buf.implementation()')
   vim.cmd(
-    'command! LspDiagPrev lua vim.lsp.diagnostic.goto_prev({ wrap = false, popup_opts = { border = require\'utils\'.border, focusable = false }})')
+    'command! LspDiagPrev lua vim.diagnostic.goto_prev({ wrap = false, popup_opts = { border = require\'utils\'.border, focusable = false }})')
   vim.cmd(
-    'command! LspDiagNext lua vim.lsp.diagnostic.goto_next({ wrap = false, popup_opts = { border = require\'utils\'.border, focusable = false }})')
+    'command! LspDiagNext lua vim.diagnostic.goto_next({ wrap = false, popup_opts = { border = require\'utils\'.border, focusable = false }})')
   vim.cmd(
-    'command! LspDiagLine lua vim.lsp.diagnostic.show_line_diagnostics({ show_header = true, border = require\'utils\'.border, focusable = false })')
+    'command! LspDiagLine lua vim.diagnostic.open_float({ show_header = true, border = require\'utils\'.border, focusable = false })')
   vim.cmd('command! LspSignatureHelp lua vim.lsp.buf.signature_help()')
   vim.cmd(
     'command! LspAddWorkspaceFolder lua vim.lsp.buf.add_workspace_folder()')
@@ -78,7 +63,7 @@ local function register_commands()
     'command! LspRemoveWorkspaceFolder lua vim.lsp.buf.remove_workspace_folder()')
   vim.cmd(
     'command! LspListWorkspaceFolders lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))')
-  vim.cmd('command! LspListDiagnostics lua vim.lsp.diagnostic.set_loclist()')
+  vim.cmd('command! LspListDiagnostics lua vim.diagnostic.set_loclist()')
 end
 
 local function lsp_keymaps(bufnr)
@@ -136,7 +121,6 @@ M.setup = function()
   end
 
   vim.lsp.handlers['textDocument/definition'] = goto_definition('vsplit')
-  vim.lsp.handlers['textDocument/formatting'] = format_async
   vim.lsp.handlers['textDocument/hover'] =
     vim.lsp.with(vim.lsp.handlers.hover, { border = u.border })
   vim.lsp.handlers['textDocument/signatureHelp'] =
@@ -158,9 +142,10 @@ M.capabilities = cmp_nvim_lsp.update_capabilities(capabilities)
 M.on_attach = function(client, bufnr)
   if client.name == 'tsserver' then
     client.resolved_capabilities.document_formatting = false
-    client.resolved_capabilities.publishDiagnostics = false
+    -- vim.lsp.handlers['textDocument/publishDiagnostics'] = function() end
   elseif client.name == 'eslint' then
     client.resolved_capabilities.document_formatting = true
+    client.resolved_capabilities.document_range_formatting = true
   end
   lsp_keymaps(bufnr)
   lsp_highlight_document(client)
@@ -171,7 +156,7 @@ M.on_attach = function(client, bufnr)
     vim.api.nvim_exec([[
          augroup LspAutocommands
              autocmd! * <buffer>
-             autocmd BufWritePost <buffer> LspFormatting
+             autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_seq_sync()
          augroup END
          ]], true)
   end

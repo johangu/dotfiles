@@ -66,7 +66,16 @@ gitsigns.setup {
     ['x ih'] = ':<C-U>lua require"gitsigns".select_hunk()<CR>'
   },
   watch_index = {interval = 1000},
-  current_line_blame = false,
+  current_line_blame = true,
+  current_line_blame_opts = {
+    virt_text = true,
+    virt_text_pos = 'eol',
+    delay = 1000,
+    ignore_whitespace = true
+  },
+  current_line_blame_formatter_opts = {
+    relative_time = false
+  },
   sign_priority = 6,
   update_debounce = 100,
   status_formatter = nil, -- Use default

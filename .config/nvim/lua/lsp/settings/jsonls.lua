@@ -8,6 +8,7 @@ end
 local opts = {
   settings = {
     json = {
+      format = { enable = false },
       schemas = schemastore.json.schemas()
     }
   }

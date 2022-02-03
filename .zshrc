@@ -102,7 +102,7 @@ RPROMPT="%{$fg[red]%} %(?..[%?])"
 
 ## Plugins section: Enable fish style features
 # Check if zplug is installed
-if [ ! -d ~/.zplug ](/zplug/zplug/wiki/-!--d-~/.zplug-); then
+if [ ! -d ~/.zplug ]; then
   curl -sL --proto-redir -all,https https://raw.githubusercontent.com/zplug/installer/master/installer.zsh | zsh
 fi
 source ~/.zplug/init.zsh

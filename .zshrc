@@ -13,6 +13,9 @@ setopt appendhistory                                            # Immediately ap
 setopt histignorealldups                                        # If a new command is a duplicate, remove the older one
 setopt autocd                                                   # if only directory path is entered, cd there.
 
+. $HOME/.asdf/asdf.sh
+fpath=(${ASDF_DIR}/completions $fpath)
+
 autoload -Uz compinit zcalc vcs_info
 
 _comp_files=(${ZDOTDIR:-$HOME}/.zcompdump(Nm-20))
@@ -93,7 +96,7 @@ zstyle ':vcs_info:git*+set-message:*' hooks git-untracked
 precmd() { vcs_info }
 
 # Maia prompt
-PROMPT='%B%F{#1d202f}%K{#7aa2f7} %(4~|%-1~/.../%2~|%~) %k%f%b${vcs_info_msg_0_} %B%(?.%{$reset_color%}.%{$fg[red]%})>%{$reset_color%}%b '
+PROMPT='%B%F{#1d202f}%K{#7aa2f7} %(4~|%-1~/.../%1~|%~) %k%f%b${vcs_info_msg_0_} %B%(?.%{$reset_color%}.%{$fg[red]%})>%{$reset_color%}%b '
 # Right prompt with exit status of previous command if not successful
 RPROMPT="%{$fg[red]%} %(?..[%?])" 
 

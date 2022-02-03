@@ -1,13 +1,14 @@
 export XDG_CACHE_HOME="${XDG_CACHE_HOME:-$HOME/.cache}"
 export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
-export XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
 export XDG_LOCAL_HOME="${XDG_LOCAL_HOME:-$HOME/.local}"
+export XDG_DATA_HOME="${XDG_DATA_HOME:-$HOME/.local/share}"
 export XDG_STATE_HOME="${XDG_LOCAL_STATE:-$HOME/.local/state}"
 export GIT_HOME="$HOME/Documents/git"
 export ANDROID_HOME="$HOME/.android/development"
 export ASDF_CONFIG_FILE="$XDG_CONFIG_HOME/asdf/config"
-export ASDF_DATA_DIR="$$XDG_DATA_HOME/asdf"
-export SDL_VIDEODRIVER=wayland
+export ASDF_DATA_DIR="$XDG_DATA_HOME/asdf"
+export LIBVA_DRIVER_NAME=iHD
+# export SDL_VIDEODRIVER=wayland
 export DOTNET_CLI_TELEMETRY_OPTOUT=1
 export SAM_CLI_TELEMETRY=0
 
@@ -42,5 +43,5 @@ PATH="$XDG_LOCAL_HOME/bin:$PATH"
 PATH="$HOME/.nodenv/bin:$HOME/.pyenv/bin:$HOME/.rbenv/bin:$PATH"
 PATH="$GIT_HOME/github.com/flutter/flutter/bin:$PATH"
 PATH="$ANDROID_HOME/cmdline-tools/latest/bin:$ANDROID_HOME/tools:$ANDROID_HOME/platform-tools:$PATH"
-PATH="./node_modules/.bin:$XDG_LOCAL_HOME/bin/node_modules/bin:$(npm get prefix)/bin:$PATH"
+PATH="./node_modules/.bin:$XDG_LOCAL_HOME/bin/node_modules/bin:$PATH"
 export PATH

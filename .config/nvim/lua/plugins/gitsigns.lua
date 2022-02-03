@@ -1,4 +1,6 @@
-local log_error = require'utils'.log_error
+local u = require 'utils'
+local log_error = u.log_error
+local map = u.map
 local status_ok, gitsigns = pcall(require, 'gitsigns')
 if not status_ok then
   log_error('Plugin', 'Failed to load gitsigns')
@@ -6,6 +8,32 @@ if not status_ok then
 end
 
 gitsigns.setup {
+  on_attach = function()
+    -- Navigation
+    map('n', ']c', '&diff ? \']c\' : \'<cmd>Gitsigns next_hunk<CR>\'',
+        { expr = true })
+    map('n', '[c', '&diff ? \'[c\' : \'<cmd>Gitsigns prev_hunk<CR>\'',
+        { expr = true })
+
+    -- Actions
+    map('n', '<leader>hs', '<cmd>Gitsigns stage_hunk<CR>')
+    map('v', '<leader>hs', '<cmd>Gitsigns stage_hunk<CR>')
+    map('n', '<leader>hr', '<cmd>Gitsigns reset_hunk<CR>')
+    map('v', '<leader>hr', '<cmd>Gitsigns reset_hunk<CR>')
+    map('n', '<leader>hS', '<cmd>Gitsigns stage_buffer<CR>')
+    map('n', '<leader>hu', '<cmd>Gitsigns undo_stage_hunk<CR>')
+    map('n', '<leader>hR', '<cmd>Gitsigns reset_buffer<CR>')
+    map('n', '<leader>hp', '<cmd>Gitsigns preview_hunk<CR>')
+    -- map('n', '<leader>hb', function() gs.blame_line { full = true } end)
+    map('n', '<leader>tb', '<cmd>Gitsigns toggle_current_line_blame<CR>')
+    map('n', '<leader>hd', '<cmd>Gitsigns diffthis<CR>')
+    -- map('n', '<leader>hD', function() gs.diffthis('~') end)
+    map('n', '<leader>td', '<cmd>Gitsigns toggle_deleted<CR>')
+
+    -- Text object
+    map('o', 'ih', ':<C-U>Gitsigns select_hunk<CR>')
+    map('x', 'ih', ':<C-U>Gitsigns select_hunk<CR>')
+  end,
   signs = {
     add = {
       hl = 'GitSignsAdd',
@@ -40,32 +68,7 @@ gitsigns.setup {
   },
   numhl = false,
   linehl = false,
-  keymaps = {
-    -- Default keymap options
-    noremap = true,
-    buffer = true,
-
-    ['n ]c'] = {
-      expr = true,
-      '&diff ? \']c\' : \'<cmd>lua require"gitsigns".next_hunk()<CR>\''
-    },
-    ['n [c'] = {
-      expr = true,
-      '&diff ? \'[c\' : \'<cmd>lua require"gitsigns".prev_hunk()<CR>\''
-    },
-
-    ['n <leader>hs'] = '<cmd>lua require"gitsigns".stage_hunk()<CR>',
-    ['n <leader>hu'] = '<cmd>lua require"gitsigns".undo_stage_hunk()<CR>',
-    ['n <leader>hr'] = '<cmd>lua require"gitsigns".reset_hunk()<CR>',
-    ['n <leader>hR'] = '<cmd>lua require"gitsigns".reset_buffer()<CR>',
-    ['n <leader>hp'] = '<cmd>lua require"gitsigns".preview_hunk()<CR>',
-    ['n <leader>hb'] = '<cmd>lua require"gitsigns".blame_line()<CR>',
-
-    -- Text objects
-    ['o ih'] = ':<C-U>lua require"gitsigns".select_hunk()<CR>',
-    ['x ih'] = ':<C-U>lua require"gitsigns".select_hunk()<CR>'
-  },
-  watch_index = {interval = 1000},
+  watch_index = { interval = 1000 },
   current_line_blame = true,
   current_line_blame_opts = {
     virt_text = true,
@@ -73,9 +76,7 @@ gitsigns.setup {
     delay = 1000,
     ignore_whitespace = true
   },
-  current_line_blame_formatter_opts = {
-    relative_time = false
-  },
+  current_line_blame_formatter_opts = { relative_time = false },
   sign_priority = 6,
   update_debounce = 100,
   status_formatter = nil, -- Use default

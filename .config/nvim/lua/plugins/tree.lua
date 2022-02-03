@@ -8,14 +8,14 @@ local keymap = require'utils'.map
 
 nvim_tree.setup {
   auto_close = true,
+  git_hl = true,
   diagnostics = {
-    enable = false,
+    enable = true,
     icons = {hint = '', info = '', warning = '', error = ''}
   },
-  filters = {custom = {'.git', 'node_modules', '.cache', 'coverage'}}
+  filters = {custom = {'.git', 'node_modules', '.cache', 'coverage'}},
+  quit_on_open = true,
+  group_empty = true
 }
-vim.g.nvim_tree_quit_on_open = 1
-vim.g.nvim_tree_git_hl = 1
-vim.g.nvim_tree_group_empty = 1
 
 keymap('n', '<leader>k', ':NvimTreeToggle<CR>')

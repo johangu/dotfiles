@@ -16,7 +16,7 @@ M.border = {
 M.map = function(mode, lhs, rhs, opts)
   local options = { noremap = true, silent = true }
   if opts then
-    options.tbl_extend('force', options, opts)
+    vim.tbl_extend('force', options, opts)
   end
   local ok, error = pcall(vim.api.nvim_set_keymap, mode, lhs, rhs, options)
   if not ok then
@@ -27,7 +27,7 @@ end
 M.buf_map = function(bufnr, mode, lhs, rhs, opts)
   local options = { noremap = true, silent = true }
   if opts then
-    options.tbl_extend('force', options, opts)
+    vim.tbl_extend('force', options, opts)
   end
   local ok, error = pcall(vim.api.nvim_buf_set_keymap, bufnr, mode, lhs, rhs, options)
   if not ok then

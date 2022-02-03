@@ -56,7 +56,6 @@ return packer.startup(function(use)
 
   -- UI/UX
   use 'folke/tokyonight.nvim'
-  use 'christoomey/vim-tmux-navigator'
   use 'kyazdani42/nvim-web-devicons'
   use {
     'hoob3rt/lualine.nvim',
@@ -105,7 +104,7 @@ return packer.startup(function(use)
     requires = 'nvim-telescope/telescope.nvim',
     config = function() require'neoclip'.setup {} end
   }
-  use 'mfussenegger/nvim-dap'
+  use { 'mfussenegger/nvim-dap', config = function() require'plugins.dap' end }
 
   -- git
   use {

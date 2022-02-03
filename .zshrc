@@ -96,11 +96,15 @@ zstyle ':vcs_info:git*+set-message:*' hooks git-untracked
 precmd() { vcs_info }
 
 # Maia prompt
-PROMPT='%B%F{#1d202f}%K{#7aa2f7} %(4~|%-1~/.../%1~|%~) %k%f%b${vcs_info_msg_0_} %B%(?.%{$reset_color%}.%{$fg[red]%})>%{$reset_color%}%b '
+PROMPT='%B%F{#ffffff}%K{#E95420}   %F{#1d202f}%K{#7aa2f7} %(4~|%-1~/.../%1~|%~) %k%f%b${vcs_info_msg_0_} %B%(?.%{$reset_color%}.%{$fg[red]%})>%{$reset_color%}%b '
 # Right prompt with exit status of previous command if not successful
 RPROMPT="%{$fg[red]%} %(?..[%?])" 
 
 ## Plugins section: Enable fish style features
+# Check if zplug is installed
+if [ ! -d ~/.zplug ](/zplug/zplug/wiki/-!--d-~/.zplug-); then
+  curl -sL --proto-redir -all,https https://raw.githubusercontent.com/zplug/installer/master/installer.zsh | zsh
+fi
 source ~/.zplug/init.zsh
 
 # Use syntax highlighting

@@ -1,16 +1,7 @@
 local M = {}
 local u = require 'utils'
-local capabilities = vim.lsp.protocol.make_client_capabilities()
---[[ capabilities.textDocument.completion.completionItem.snippetSupport = true
-capabilities.textDocument.colorProvider = {dynamicRegistration = false} ]]
 
-local status_ok, cmp_nvim_lsp = pcall(require, 'cmp_nvim_lsp')
-if not status_ok then
-  u.log_error('Require', 'Could not load cmp_nvim_lsp')
-  return
-end
-
-local goto_definition = function(split_cmd)
+local function goto_definition(split_cmd)
   local util = vim.lsp.util
   local log = require('vim.lsp.log')
   local api = vim.api
@@ -37,6 +28,32 @@ local goto_definition = function(split_cmd)
   end
 
   return handler
+end
+
+local function config_diagnostics()
+  local signs = {
+    { name = 'Error', text = nil },
+    { name = 'Information', text = nil },
+    { name = 'Info', text = nil },
+    { name = 'Warning', text = nil },
+    { name = 'Warn', text = nil },
+    { name = 'Hint', text = nil }
+  }
+  for _, sign in ipairs(signs) do
+    vim.fn.sign_define('DiagnosticSign' .. sign.name, {
+      text = sign.text,
+      numhl = 'Diagnostic' .. sign.name,
+      linehl = 'Diagnostic' .. sign.name
+    })
+  end
+
+  vim.diagnostic.config({
+    underline = false,
+    virtual_text = false,
+    signs = true,
+    update_in_insert = true,
+    severity_sort = true
+  })
 end
 
 local function register_commands()
@@ -87,78 +104,67 @@ local function lsp_keymaps(bufnr)
   u.buf_map(bufnr, 'n', '<leader>ll', ':LspListDiagnostics<CR>')
 end
 
-local lsp_highlight_document = function(client)
+local function lsp_highlight_document(client)
   if client.resolved_capabilities.document_highlight then
     vim.api.nvim_exec([[
-        hi LspReferenceRead cterm=bold ctermbg=red guibg=LightGray guifg=Black
-        hi LspReferenceText cterm=bold ctermbg=red guibg=LightGray guifg=Black
-        hi LspReferenceWrite cterm=bold ctermbg=red guibg=LightGray guifg=Black
-        augroup lsp_document_highlight
-            autocmd! * <buffer>
-            autocmd CursorHold <buffer> lua vim.lsp.buf.document_highlight()
-            autocmd CursorHoldI <buffer> lua vim.lsp.buf.signature_help()
-            autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
-        augroup END
-        ]], false)
+      hi LspReferenceRead cterm=bold ctermbg=red guibg=LightGray guifg=Black
+      hi LspReferenceText cterm=bold ctermbg=red guibg=LightGray guifg=Black
+      hi LspReferenceWrite cterm=bold ctermbg=red guibg=LightGray guifg=Black
+      augroup lsp_document_highlight
+        autocmd! * <buffer>
+        autocmd CursorHold <buffer> lua vim.lsp.buf.document_highlight()
+        autocmd CursorHoldI <buffer> lua vim.lsp.buf.signature_help()
+        autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
+      augroup END
+      ]], false)
   end
 end
 
 M.setup = function()
-  local signs = {
-    { name = 'Error', text = nil },
-    { name = 'Information', text = nil },
-    { name = 'Info', text = nil },
-    { name = 'Warning', text = nil },
-    { name = 'Warn', text = nil },
-    { name = 'Hint', text = nil }
-  }
-  for _, sign in ipairs(signs) do
-    vim.fn.sign_define('DiagnosticSign' .. sign.name, {
-      text = sign.text,
-      numhl = 'Diagnostic' .. sign.name,
-      linehl = 'Diagnostic' .. sign.name
-    })
-  end
-
   vim.lsp.handlers['textDocument/definition'] = goto_definition('vsplit')
   vim.lsp.handlers['textDocument/hover'] =
     vim.lsp.with(vim.lsp.handlers.hover, { border = u.border })
   vim.lsp.handlers['textDocument/signatureHelp'] =
     vim.lsp.with(vim.lsp.handlers.signature_help, { border = u.border })
-  vim.lsp.handlers['textDocument/publishDiagnostics'] =
-    vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics, {
-      underline = false,
-      virtual_text = false,
-      signs = true,
-      update_in_insert = true,
-      severity_sort = true
-    })
 
+  config_diagnostics()
   register_commands()
 end
 
-M.capabilities = cmp_nvim_lsp.update_capabilities(capabilities)
+M.make_client_capabilities = function()
+  local capabilities = vim.lsp.protocol.make_client_capabilities()
+
+  local status_ok, cmp_nvim_lsp = pcall(require, 'cmp_nvim_lsp')
+  if not status_ok then
+    u.log_error('Require', 'Could not load cmp_nvim_lsp')
+    return capabilities
+  else
+    capabilities.textDocument.completion.completionItem.snippetSupport = true
+    capabilities.textDocument.colorProvider = {dynamicRegistration = false}
+    local updated_capabilities = cmp_nvim_lsp.update_capabilities(capabilities)
+
+    return updated_capabilities
+  end
+end
 
 M.on_attach = function(client, bufnr)
   if client.name == 'tsserver' then
     client.resolved_capabilities.document_formatting = false
-    -- vim.lsp.handlers['textDocument/publishDiagnostics'] = function() end
+    client.resolved_capabilities.document_range_formatting = false
   elseif client.name == 'eslint' then
     client.resolved_capabilities.document_formatting = true
     client.resolved_capabilities.document_range_formatting = true
   end
   lsp_keymaps(bufnr)
   lsp_highlight_document(client)
-  -- u.buf_opt(bufnr, 'omnifunc', 'v:lua.vim.lsp.omnifunc')
 
-  -- Set some keybinds conditional on server capabilities
   if client.resolved_capabilities.document_formatting then
     vim.api.nvim_exec([[
-         augroup LspAutocommands
-             autocmd! * <buffer>
-             autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_seq_sync()
-         augroup END
-         ]], true)
+      augroup LspAutocommands
+        autocmd! * <buffer>
+        autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_seq_sync()
+      augroup END
+    ]], true)
   end
 end
 

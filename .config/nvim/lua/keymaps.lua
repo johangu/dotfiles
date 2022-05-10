@@ -31,3 +31,6 @@ keymap("v", "<A-j>", ":move .+1<CR>==")
 keymap("v", "<A-k>", ":move .-2<CR>==")
 keymap("x", "<A-j>", ":move '>+1<CR>gv-gv")
 keymap("x", "<A-k>", ":move '<-2<CR>gv-gv")
+
+-- normalise leaving terminal insert mode
+keymap("t", "<C-[>", "<C-\\><C-n>")

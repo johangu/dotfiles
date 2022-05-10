@@ -10,6 +10,6 @@ configs.setup {
   ensure_installed = 'maintained',
   highlight = {enable = true},
   indent = {enable = true, disable = {'yaml'}},
-  -- rainbow = {enable = true, extended_mode = true},
+  rainbow = {enable = true, extended_mode = true},
   refactor = {highlight_definitions = {enable = true}}
 }

@@ -81,7 +81,7 @@ return packer.startup(function(use)
   } ]]
 
   -- Productivity
-  use 'github/copilot.vim'
+  use {'github/copilot.vim', config = function() require 'plugins.copilot' end }
   use 'b0o/schemastore.nvim'
   use { 'weilbith/nvim-code-action-menu', cmd = 'CodeActionMenu' }
   use 'b3nj5m1n/kommentary'
@@ -97,14 +97,14 @@ return packer.startup(function(use)
     'godlygeek/tabular',
     config = function() require 'plugins.tabularize' end
   }
-  -- use 'jiangmiao/auto-pairs'
-  -- use { 'hrsh7th/nvim-compe', config = function() require 'plugins.compe' end }
+  use 'jiangmiao/auto-pairs'
   use {
     'AckslD/nvim-neoclip.lua',
     requires = 'nvim-telescope/telescope.nvim',
     config = function() require'neoclip'.setup {} end
   }
   use { 'mfussenegger/nvim-dap', config = function() require'plugins.dap' end }
+  use { 'NTBBloodbath/rest.nvim', ft = {'http'}, config = function() require'plugins.rest' end }
 
   -- git
   use {

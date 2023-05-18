@@ -6,6 +6,10 @@ local opts = {
         version = 'LuaJIT',
         path = vim.split(package.path, ';')
       },
+      completion = {
+        keywordSnippet = "Replace",
+        callSnippet = "Replace"
+      },
       diagnostics = {
         globals = { 'vim' } -- Get the language server to recognize the `vim` global
       },

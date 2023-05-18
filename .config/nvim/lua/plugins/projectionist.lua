@@ -9,11 +9,11 @@ vim.g.projectionist_heuristics = {
     ['jest.config.js'] = {['jest.config.js'] = {type = 'config'}},
     ['*.js'] = {
         ['*.js'] = {
-            alternate = {'__tests__/{}.js', '__mocks__/{}.js'},
+            alternate = {'__tests__/{}.test.js', '__mocks__/{}.js'},
             console = 'node {file}',
             type = 'src'
         },
-        ['__tests__/*.js'] = {
+        ['__tests__/*.test.js'] = {
             alternate = '{}.js',
             console = 'jest {file}',
             type = 'test'

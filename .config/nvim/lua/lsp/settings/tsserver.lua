@@ -7,13 +7,12 @@ local function organize_imports()
   vim.lsp.buf.execute_command(params)
 end
 
-local opts = {
+return {
   handlers = {
-    ["textDocument/publishDiagnostics"] = function() end
+    ["textDocument/publishDiagnostics"] = function()
+    end
   },
   commands = {
     OrganizeImports = { organize_imports, description = 'Organize Imports' }
   }
 }
-
-return opts

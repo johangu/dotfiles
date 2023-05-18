@@ -5,21 +5,25 @@ if not status_ok then
   return
 end
 
-local keymap = require'utils'.map
 local actions = require 'telescope.actions'
 local previewers = require 'telescope.previewers'
 local sorters = require 'telescope.sorters'
 
-telescope.load_extension('neoclip')
+-- telescope.load_extension('neoclip')
 
-keymap('n', '<leader>ff', '<cmd>Telescope find_files<cr>')
-keymap('n', '<leader>fF', '<cmd>Telescope git_files<cr>')
-keymap('n', '<leader>fg', '<cmd>Telescope live_grep<cr>')
-keymap('n', '<leader>fb', '<cmd>Telescope buffers<cr>')
-keymap('n', '<leader>fh', '<cmd>Telescope help_tags<cr>')
-keymap('n', '<leader>ft', '<cmd>Telescope treesitter<cr>')
-keymap('n', '<leader>fr', '<cmd>Telescope lsp_references<cr>')
-keymap('n', '<leader>fv', '<cmd>Telescope neoclip<cr>')
+vim.keymap.set('n', '<leader>?', require('telescope.builtin').oldfiles, { desc = '[?] Find recently opened files' })
+vim.keymap.set('n', '<leader><space>', require'telescope.builtin'.buffers, { desc = '[ ] Find existing buffers' })
+vim.keymap.set('n', '<leader>/', function()
+  require('telescope.builtin').current_buffer_fuzzy_find(require('telescope.themes').get_dropdown {
+    winblend = 10,
+    previewer = false,
+  })
+end, { desc = '[/] Fuzzy search in current buffer' })
+vim.keymap.set('n', '<leader>sf', require'telescope.builtin'.find_files, { desc = '[S]earch [F]iles' })
+vim.keymap.set('n', '<leader>sh', require'telescope.builtin'.help_tags, { desc = '[S]earch [H]elp' })
+vim.keymap.set('n', '<leader>sd', require'telescope.builtin'.diagnostics, { desc = '[S]earch [D]iagnostics' })
+vim.keymap.set('n', '<leader>sg', require'telescope.builtin'.live_grep, { desc = '[S]earch by [G]rep' })
+vim.keymap.set('n', '<leader>sw', require'telescope.builtin'.grep_string, { desc = '[S]earch current [W]ord' })
 
 telescope.setup {
   defaults = {
@@ -27,7 +31,11 @@ telescope.setup {
     mappings = {
       n = {
         ['<ci-q>'] = actions.send_to_qflist + actions.open_qflist
-      }
+      },
+      i = {
+        ['<C-u'] = false,
+        ['<C-j'] = false,
+      },
     },
     prompt_prefix = '   ',
     selection_caret = ' ',
@@ -70,6 +78,7 @@ telescope.setup {
       }
     },
     lsp_code_actions = { theme = 'cursor' },
-    lsp_range_code_actions = { theme = 'cursor' }
+    lsp_range_code_actions = { theme = 'cursor' },
+    spell_suggest = { theme = 'cursor' }
   }
 }

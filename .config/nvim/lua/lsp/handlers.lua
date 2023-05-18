@@ -30,146 +30,37 @@ local function goto_definition(split_cmd)
   return handler
 end
 
-local function config_diagnostics()
-  local signs = {
-    { name = 'Error', text = nil },
-    { name = 'Information', text = nil },
-    { name = 'Info', text = nil },
-    { name = 'Warning', text = nil },
-    { name = 'Warn', text = nil },
-    { name = 'Hint', text = nil }
-  }
-  for _, sign in ipairs(signs) do
-    vim.fn.sign_define('DiagnosticSign' .. sign.name, {
-      text = sign.text,
-      numhl = 'Diagnostic' .. sign.name,
-      linehl = 'Diagnostic' .. sign.name
-    })
-  end
-
-  vim.diagnostic.config({
-    underline = false,
-    virtual_text = false,
-    signs = true,
-    update_in_insert = true,
-    severity_sort = true
-  })
-end
-
-local function register_commands()
-  vim.cmd('command! LspDef lua vim.lsp.buf.definition()')
-  vim.cmd('command! LspDeclaration lua vim.lsp.buf.declaration()')
-  vim.cmd('command! LspFormatting lua vim.lsp.buf.formatting()')
-  vim.cmd('command! LspCodeAction lua vim.lsp.buf.code_action()')
-  vim.cmd('command! LspRangeCodeAction lua vim.lsp.buf.range_code_action()')
-  vim.cmd('command! LspHover lua vim.lsp.buf.hover()')
-  vim.cmd('command! LspRename lua vim.lsp.buf.rename()')
-  vim.cmd('command! LspRefs lua vim.lsp.buf.references()')
-  vim.cmd('command! LspTypeDef lua vim.lsp.buf.type_definition()')
-  vim.cmd('command! LspImplementation lua vim.lsp.buf.implementation()')
-  vim.cmd(
-    'command! LspDiagPrev lua vim.diagnostic.goto_prev({ wrap = false, popup_opts = { border = require\'utils\'.border, focusable = false }})')
-  vim.cmd(
-    'command! LspDiagNext lua vim.diagnostic.goto_next({ wrap = false, popup_opts = { border = require\'utils\'.border, focusable = false }})')
-  vim.cmd(
-    'command! LspDiagLine lua vim.diagnostic.open_float({ show_header = true, border = require\'utils\'.border, focusable = false })')
-  vim.cmd('command! LspSignatureHelp lua vim.lsp.buf.signature_help()')
-  vim.cmd(
-    'command! LspAddWorkspaceFolder lua vim.lsp.buf.add_workspace_folder()')
-  vim.cmd(
-    'command! LspRemoveWorkspaceFolder lua vim.lsp.buf.remove_workspace_folder()')
-  vim.cmd(
-    'command! LspListWorkspaceFolders lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))')
-  vim.cmd('command! LspListDiagnostics lua vim.diagnostic.set_loclist()')
-end
-
-local function lsp_keymaps(bufnr)
-  u.buf_map(bufnr, 'n', 'gD', ':LspDeclaration<CR>')
-  u.buf_map(bufnr, 'n', 'gd', ':LspDef<CR>')
-  u.buf_map(bufnr, 'n', 'gy', ':LspTypeDef<CR>')
-  u.buf_map(bufnr, 'n', 'gR', ':LspRename<CR>')
-  u.buf_map(bufnr, 'n', 'gr', ':LspRefs<CR>')
-  u.buf_map(bufnr, 'n', 'K', ':LspHover<CR>')
-  u.buf_map(bufnr, 'n', 'gi', ':LspImplementation<CR>')
-  u.buf_map(bufnr, 'n', '<C-k>', ':LspSignatureHelp<CR>')
-  u.buf_map(bufnr, 'n', '[d', ':LspDiagNext<CR>')
-  u.buf_map(bufnr, 'n', ']d', ':LspDiagPrev<CR>')
-  u.buf_map(bufnr, 'n', '<leader>[', ':LspDiagLine<CR>')
-  u.buf_map(bufnr, 'n', '<leader>ca', ':CodeActionMenu<CR>')
-  u.buf_map(bufnr, 'x', '<leader>ca', ':LspRangeCodeAction<CR>')
-
-  u.buf_map(bufnr, 'n', '<leader>wa', ':LspAddWorkspaceFolder<CR>')
-  u.buf_map(bufnr, 'n', '<leader>wr', ':LspRemoveWorkspaceFolder<CR>')
-  u.buf_map(bufnr, 'n', '<leader>wl', ':LspListWorkspaceFolders<CR>')
-  u.buf_map(bufnr, 'n', '<leader>ll', ':LspListDiagnostics<CR>')
-end
 
 local function lsp_highlight_document(client)
-  if client.resolved_capabilities.document_highlight then
+  local auGroup = vim.api.nvim_create_augroup('LspDocumentHighlight', { clear = true })
+
+  if client.server_capabilities.documentHighlightProvider then
+    vim.api.nvim_create_autocmd('CursorHold', {
+      callback = vim.schedule_wrap(vim.lsp.buf.document_highlight),
+      desc = 'Highlight word under the cursor',
+      group = auGroup
+    })
+    vim.api.nvim_create_autocmd('CursorHoldI', {
+      callback = vim.schedule_wrap(vim.lsp.buf.signature_help),
+      desc = 'Show signature help for word under the cursor',
+      group = auGroup
+    })
+    vim.api.nvim_create_autocmd('CursorMoved', {
+      callback = vim.schedule_wrap(vim.lsp.buf.clear_references),
+      desc = 'Clear references when moving cursor',
+      group = auGroup
+    })
+
     vim.api.nvim_exec([[
       hi LspReferenceRead cterm=bold ctermbg=red guibg=LightGray guifg=Black
       hi LspReferenceText cterm=bold ctermbg=red guibg=LightGray guifg=Black
       hi LspReferenceWrite cterm=bold ctermbg=red guibg=LightGray guifg=Black
-      augroup lsp_document_highlight
-        autocmd! * <buffer>
-        autocmd CursorHold <buffer> lua vim.lsp.buf.document_highlight()
-        autocmd CursorHoldI <buffer> lua vim.lsp.buf.signature_help()
-        autocmd CursorMoved <buffer> lua vim.lsp.buf.clear_references()
-      augroup END
-      ]], false)
-  end
-end
-
-M.setup = function()
-  vim.lsp.handlers['textDocument/definition'] = goto_definition('vsplit')
-  vim.lsp.handlers['textDocument/hover'] =
-    vim.lsp.with(vim.lsp.handlers.hover, { border = u.border })
-  vim.lsp.handlers['textDocument/signatureHelp'] =
-    vim.lsp.with(vim.lsp.handlers.signature_help, { border = u.border })
-
-  config_diagnostics()
-  register_commands()
-end
-
-M.make_client_capabilities = function()
-  local capabilities = vim.lsp.protocol.make_client_capabilities()
-
-  local status_ok, cmp_nvim_lsp = pcall(require, 'cmp_nvim_lsp')
-  if not status_ok then
-    u.log_error('Require', 'Could not load cmp_nvim_lsp')
-    return capabilities
-  else
-    capabilities.textDocument.completion.completionItem.snippetSupport = true
-    capabilities.textDocument.colorProvider = {dynamicRegistration = false}
-    local updated_capabilities = cmp_nvim_lsp.update_capabilities(capabilities)
-
-    return updated_capabilities
+    ]], false)
   end
 end
 
 M.on_attach = function(client, bufnr)
-  if client.name == 'tsserver' then
-    client.resolved_capabilities.document_formatting = false
-    client.resolved_capabilities.document_range_formatting = false
-  elseif client.name == 'eslint' then
-    client.resolved_capabilities.document_formatting = true
-    client.resolved_capabilities.document_range_formatting = true
-  end
-  lsp_keymaps(bufnr)
   lsp_highlight_document(client)
-
-  if client.resolved_capabilities.document_formatting then
-    vim.api.nvim_exec([[
-      augroup LspAutocommands
-        autocmd! * <buffer>
-        autocmd BufWritePre <buffer> lua vim.lsp.buf.formatting_seq_sync()
-      augroup END
-    ]], true)
-  end
-end
-
-M.on_init = function(client)
-  if client.config.flags then client.config.flags.allow_incremental_sync = true end
 end
 
 return M

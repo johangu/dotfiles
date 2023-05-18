@@ -13,5 +13,3 @@ vim.g.copilot_filetypes = {
   ["python"] = true,
 }
 
-vim.g.copilot_no_tab_map = true
-map('i', '<C-j>', 'copilot#Accept("<CR>")')

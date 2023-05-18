@@ -1,153 +1,113 @@
-local cmd = vim.cmd
-local fn = vim.fn
-
--- Auto install packer.nvim if not exists
-local install_path = fn.stdpath('data') .. '/site/pack/packer/opt/packer.nvim'
-if fn.empty(fn.glob(install_path)) > 0 then
-  PACKER_BOOTSTRAP = fn.system {
+local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system {
     'git',
     'clone',
-    '--depth',
-    '1',
-    'https://github.com/wbthomason/packer.nvim',
-    install_path
+    '--filter=blob:none',
+    'https://github.com/folke/lazy.nvim.git',
+    '--branch=stable',
+    lazypath
   }
 end
-cmd [[packadd packer.nvim]]
+vim.opt.rtp:prepend(lazypath)
 
--- Auto compile when there are changes in plugins/init.lua
-cmd [[ 
-  augroup packer_user_config
-    autocmd!
-    autocmd BufWritePost init.lua source <afile> | PackerSync 
-  augroup end
- ]]
+require('lazy').setup({
+  'tpope/vim-sleuth',
+  'tpope/vim-speeddating',
+  -- 'tpope/vim-surround',
+  'jiangmiao/auto-pairs',
+  'b3nj5m1n/kommentary',
+  'b0o/schemastore.nvim',
+  {
+    'kylechui/nvim-surround',
+    event = "VeryLazy",
+    config = true
+  },
 
-local status_ok, packer = pcall(require, 'packer')
-if not status_ok then
-  vim.notify 'Error loading packer.nvim'
-  return
-end
+  -- LSP Config and plugins
+  require 'plugins.lspconfig',
 
-packer.init {
-  max_jobs = 6,
-  git = { default_url_format = 'git@github.com:%s' },
-  display = {
-    open_fn = function()
-      return require'packer.util'.float { border = 'rounded' }
-    end
-  }
-}
+  { -- Autocompletion
+    {
+      'hrsh7th/nvim-cmp',
+      dependencies = {
+        'hrsh7th/cmp-nvim-lsp',
+        'L3MON4D3/LuaSnip',
+        'saadparwaiz1/cmp_luasnip'
+      },
+      config = function() require 'plugins.cmp' end
+    }
+  },
 
-return packer.startup(function(use)
-  -- self manage
-  use { 'wbthomason/packer.nvim', opt = true }
-  use 'nvim-lua/plenary.nvim'
-  use 'nvim-lua/popup.nvim'
-  use {
+  require 'plugins.catppuccin',
+  -- require 'plugins.tokyonight',
+  require 'plugins.lualine',
+  require 'plugins.colorizer',
+  require 'plugins.indent_blankline',
+  require 'plugins.which_key',
+  require 'plugins.tree',
+  require 'plugins.gitsigns',
+
+  {
     'nvim-telescope/telescope.nvim',
     config = function() require 'plugins.telescope' end,
-    requires = {
-      { 'nvim-lua/popup.nvim' },
-      { 'nvim-lua/plenary.nvim' },
-      { 'nvim-telescope/telescope-fzy-native.nvim' }
-    }
-  }
+    version = '*',
+    dependencies = { 'nvim-lua/plenary.nvim' }
+  },
 
-  -- UI/UX
-  use 'folke/tokyonight.nvim'
-  use 'kyazdani42/nvim-web-devicons'
-  use {
-    'hoob3rt/lualine.nvim',
-    config = function() require 'plugins.lualine' end,
-    requires = 'kyazdani42/nvim-web-devicons'
-  }
-  use {
-    'norcalli/nvim-colorizer.lua',
-    config = function() require 'plugins.colorizer' end
-  }
-  use {
-    'lukas-reineke/indent-blankline.nvim',
-    config = function() require 'plugins.indent_blankline' end
-  }
-  use {
-    'kyazdani42/nvim-tree.lua',
-    config = function() require 'plugins.tree' end,
-    requires = 'nvim-web-devicons'
-  }
-  --[[ use {
+  {
+    'nvim-telescope/telescope-fzf-native.nvim',
+    build = 'make',
+    cond = function() return vim.fn.executable 'make' == 1 end
+  },
+  {
+    'nvim-treesitter/nvim-treesitter',
+    config = function() require 'plugins.treesitter' end,
+    dependencies = {
+      'p00f/nvim-ts-rainbow',
+      'nvim-treesitter/nvim-treesitter-textobjects'
+    },
+    build = ':TSUpdate'
+  },
+
+  --[[ {
+    'danymat/neogen',
+    dependencies = 'nvim-treesitter/nvim-treesitter',
+    config = true
+  } ]]
+
+}, {})
+
+--[[ use {
     'lewis6991/impatient.nvim',
     config = function() require 'plugins.impatient' end
   } ]]
-
-  -- Productivity
-  use {'github/copilot.vim', config = function() require 'plugins.copilot' end }
-  use 'b0o/schemastore.nvim'
-  use { 'weilbith/nvim-code-action-menu', cmd = 'CodeActionMenu' }
-  use 'b3nj5m1n/kommentary'
-  use {
+-- use { 'weilbith/nvim-code-action-menu', cmd = 'CodeActionMenu' }
+--[[ use {
     'tpope/vim-projectionist',
     config = function() require 'plugins.projectionist' end
   }
-  use 'tpope/vim-speeddating'
-  use 'tpope/vim-surround'
   use 'junegunn/goyo.vim'
   use 'junegunn/limelight.vim'
   use {
     'godlygeek/tabular',
     config = function() require 'plugins.tabularize' end
-  }
-  use 'jiangmiao/auto-pairs'
-  use {
+  } ]]
+--[[ use {
     'AckslD/nvim-neoclip.lua',
     requires = 'nvim-telescope/telescope.nvim',
     config = function() require'neoclip'.setup {} end
-  }
-  use { 'mfussenegger/nvim-dap', config = function() require'plugins.dap' end }
-  use { 'NTBBloodbath/rest.nvim', ft = {'http'}, config = function() require'plugins.rest' end }
+  } ]]
+-- use { 'mfussenegger/nvim-dap', config = function() require'plugins.dap' end }
+-- use { 'NTBBloodbath/rest.nvim', ft = {'http'}, config = function() require'plugins.rest' end }
 
-  -- git
-  use {
-    'lewis6991/gitsigns.nvim',
-    config = function() require 'plugins.gitsigns' end,
-    requires = 'nvim-lua/plenary.nvim'
-  }
-
-  use { 'hrsh7th/nvim-cmp', config = function() require 'plugins.cmp' end }
-  use 'hrsh7th/cmp-nvim-lsp'
-  use 'hrsh7th/cmp-nvim-lua'
+--[[ use 'hrsh7th/cmp-nvim-lua'
   use 'hrsh7th/cmp-buffer'
   use 'hrsh7th/cmp-calc'
   use 'hrsh7th/cmp-path'
-  use 'hrsh7th/cmp-cmdline'
-  use 'saadparwaiz1/cmp_luasnip' -- snippet completions
+  use 'hrsh7th/cmp-cmdline' ]]
+-- snippets
+-- use 'rafamadriz/friendly-snippets'
 
-  -- snippets
-  use 'L3MON4D3/LuaSnip' -- snippet engine
-  use 'rafamadriz/friendly-snippets'
-
-  -- Languages
-  use 'neovim/nvim-lspconfig'
-  use 'williamboman/nvim-lsp-installer'
-  use { 'plasticboy/vim-markdown', ft = 'markdown' }
-  use {
-    'nvim-treesitter/nvim-treesitter',
-    config = function() require 'plugins.treesitter' end,
-    requires = { 'p00f/nvim-ts-rainbow' }, -- rainbow parens for treesitter
-    run = ':TSUpdate'
-  }
-
-  -- flutter
-  use {
-    'akinsho/flutter-tools.nvim',
-    requires = { 'nvim-lua/plenary.nvim', 'nvim-telescope/telescope.nvim' },
-    config = function() require'flutter-tools'.setup {} end,
-    ft = 'dart'
-  }
-
-  -- lua
-  use { 'rafcamlet/nvim-luapad', ft = 'lua' }
-
-  -- Automatically set up the config after cloning packer.nvim
-  if PACKER_BOOTSTRAP then packer.sync() end
-end)
+-- Languages
+-- use { 'plasticboy/vim-markdown', ft = 'markdown' }

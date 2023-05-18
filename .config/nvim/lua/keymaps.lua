@@ -1,4 +1,10 @@
-local keymap = require'utils'.map
+local keymap = require 'utils'.map
+
+-- Remap for dealing with word wrap
+vim.keymap.set('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
+vim.keymap.set('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
+-- keymap('n', 'k', "v:count == 0 ? 'gk' : 'k'", { expr = true })
+-- keymap('n', 'j', "v:count == 0 ? 'gj' : 'j'", { expr = true })
 
 keymap('n', '<tab>', ':bnext<CR>')
 keymap('n', '<s-tab>', ':bprevious<CR>')
@@ -34,3 +40,9 @@ keymap("x", "<A-k>", ":move '<-2<CR>gv-gv")
 
 -- normalise leaving terminal insert mode
 keymap("t", "<C-[>", "<C-\\><C-n>")
+
+-- Diagnostic keymaps
+vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, { desc = "Go to previous diagnostic message" })
+vim.keymap.set('n', ']d', vim.diagnostic.goto_next, { desc = "Go to next diagnostic message" })
+vim.keymap.set('n', '<leader>[<space>', vim.diagnostic.open_float, { desc = "Open floating diagnostic message" })
+vim.keymap.set('n', '<leader>]<space>', vim.diagnostic.setloclist, { desc = "Open diagnostics list" })

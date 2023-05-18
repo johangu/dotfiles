@@ -1,76 +1,97 @@
-local log_error = require'utils'.log_error
-local status_ok, lualine = pcall(require, 'lualine')
-if not status_ok then
-  log_error('Plugin', 'Failed to load lualine')
-  return
-end
+return {
+  'hoob3rt/lualine.nvim',
+  dependencies = { 'kyazdani42/nvim-web-devicons' },
+  config = function()
+    local palette = require('catppuccin.palettes').get_palette()
+    local diagnostics = {
+      'diagnostics',
+      sources = { 'nvim_diagnostic' },
+      symbols = { error = '', warn = '', info = '' }
+    }
 
-local diagnostics = {
-  'diagnostics',
-  sources = { 'nvim_diagnostic' },
-  symbols = { error = '', warn = '', info = '' }
-}
+    local diff = {
+      'diff',
+      symbols = { added = ' ', modified = ' ', removed = ' ' } -- changes diff symbols
+    }
 
-local diff = {
-  'diff',
-  symbols = { added = ' ', modified = ' ', removed = ' ' } -- changes diff symbols
-}
+    local branch = { 'branch', icon = '' }
 
-local branch = { 'branch', icon = '' }
+    local mode = {
+      function() return '' end,
+      padding = { left = 1, right = 1 }
+    }
 
-local progress = function()
-  local current_line = vim.fn.line('.')
-  local total_lines = vim.fn.line('$')
-  local chars = {
-    '__',
-    '▁▁',
-    '▂▂',
-    '▃▃',
-    '▄▄',
-    '▅▅',
-    '▆▆',
-    '▇▇',
-    '██'
-  }
-  local line_ratio = current_line / total_lines
-  local index = math.ceil(line_ratio * #chars)
-  return chars[index]
-end
+    local pos_icon = {
+      function() return '' end,
+      color = {
+        bg = palette.green,
+        fg = palette.base
+      },
+      padding = { left = 0, right = 1 }
+    }
 
-local spaces = function()
-  if vim.api.nvim_buf_get_option(0, 'expandtab') then
-    return 'spaces: ' .. vim.api.nvim_buf_get_option(0, 'shiftwidth')
-  else
-    return 'tabs'
+    local dir_icon = {
+      function() return '' end,
+      color = {
+        bg = palette.pink,
+        fg = palette.base
+      },
+      separator = { left = '', right = '' },
+      padding = { left = 0, right = 1 }
+    }
+
+    require 'lualine'.setup {
+      options = {
+        component_separators = '',
+        icons_enabled = true,
+        globalstatus = true,
+        section_separators = { right = '', left = '' },
+        theme = 'catppuccin'
+      },
+      sections = {
+        lualine_a = { mode },
+        lualine_b = { branch, diff },
+        lualine_c = {
+          {
+            'filetype',
+            colored = true,
+            icon_only = true,
+            padding = { left = 1, right = 0 }
+          },
+          { 'filename', file_status = true, full_path = true },
+          diagnostics
+        },
+        lualine_x = {
+          dir_icon,
+          {
+            "vim.fn.fnamemodify(vim.fn.getcwd(), ':t')",
+            color = {
+              bg = palette.surface0,
+              fg = palette.text,
+            }
+          }
+        },
+        lualine_y = {},
+        lualine_z = {
+          pos_icon,
+          {
+            'progress',
+            color = {
+              bg = palette.surface0,
+              fg = palette.green
+            },
+            separator = { left = '', right = '' }
+          }
+        }
+      },
+      inactive_sections = {
+        lualine_a = {},
+        lualine_b = {},
+        lualine_c = { 'filetype', 'filename' },
+        lualine_x = { 'location' },
+        lualine_y = {},
+        lualine_z = {}
+      }
+    }
   end
-end
-
-local mode = { function() return '' end, padding = {left = 1, right = 1} }
-
-lualine.setup {
-  options = {
-    component_separators = '',
-    icons_enabled = true,
-    section_separators = '',
-    theme = 'tokyonight'
-  },
-  sections = {
-    lualine_a = { mode },
-    lualine_b = { branch, diff },
-    lualine_c = {
-      { 'filename', file_status = true, full_path = true },
-      diagnostics
-    },
-    lualine_x = { spaces, 'encoding', 'filetype', 'fileformat' },
-    lualine_y = { { 'location', padding = 0 } },
-    lualine_z = { progress }
-  },
-  inactive_sections = {
-    lualine_a = {},
-    lualine_b = {},
-    lualine_c = { 'filename' },
-    lualine_x = { 'location' },
-    lualine_y = {},
-    lualine_z = {}
-  }
 }

@@ -1,20 +1,45 @@
-local indent = 2
+-- Config diagnostics
+local signs = {
+  { name = 'Error',       text = nil },
+  { name = 'Information', text = nil },
+  { name = 'Info',        text = nil },
+  { name = 'Warning',     text = nil },
+  { name = 'Warn',        text = nil },
+  { name = 'Hint',        text = nil }
+}
+for _, sign in ipairs(signs) do
+  vim.fn.sign_define('DiagnosticSign' .. sign.name, {
+    text = sign.text,
+    numhl = 'Diagnostic' .. sign.name,
+    linehl = 'Diagnostic' .. sign.name
+  })
+end
 
+vim.diagnostic.config({
+  underline = false,
+  virtual_text = false,
+  signs = true,
+  update_in_insert = true,
+  severity_sort = true
+})
+
+local indent = 2
 local options = {
   autoindent = true,
   backspace = 'indent,eol,start',
   breakindent = true,
-  cmdheight = 2,
+  cmdheight = 1,
   colorcolumn = '100',
-  conceallevel = 0,
+  completeopt = 'menuone,noselect',
+  -- conceallevel = 0,
   cursorline = true,
   emoji = true,
   encoding = 'utf-8',
   fileencoding = 'utf-8',
   hidden = true,
   history = 50,
-  hlsearch = true,
-  ignorecase = true,
+  hlsearch = false,
+  gnorecase = true,
   incsearch = true,
   laststatus = 2,
   lazyredraw = true,
@@ -30,10 +55,11 @@ local options = {
   sidescrolloff = 10,
   smartcase = true,
   smartindent = true,
-  spelllang = 'en_us',
+  spelllang = 'en_gb',
   splitbelow = true,
   splitright = true,
   termguicolors = true,
+  timeout = true,
   timeoutlen = 550,
   undofile = true,
   updatetime = 500,
@@ -43,16 +69,19 @@ local options = {
   shiftwidth = indent,
   softtabstop = indent,
   tabstop = indent,
-  number = true,
   numberwidth = 3,
-  signcolumn = 'yes',
   wrap = true
 }
 
-for key, value in pairs(options) do vim.opt[key] = value end
+local windowOptions = {
+  number = true,
+  signcolumn = 'yes',
+}
+
+for key, value in pairs(options) do vim.o[key] = value end
+for key, value in pairs(windowOptions) do vim.wo[key] = value end
 
 vim.opt.shortmess:append 'c'
-vim.opt.completeopt = 'menu,menuone,noselect'
 
 vim.cmd 'filetype plugin indent on'
 
@@ -79,4 +108,3 @@ local disabled_built_ins = {
 }
 
 for _, plugin in pairs(disabled_built_ins) do vim.g['loaded_' .. plugin] = 1 end
-

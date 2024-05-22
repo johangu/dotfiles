@@ -1,0 +1,14 @@
+{
+  "Custom web component": {
+    "prefix": "cwc",
+    "body": "export default class ${1:MyComponent} extends HTML${2}Element {\n\tconstructor(${3}) {\n\t\tsuper(${3})\n\n\t\t${4}\n\t}\n\n\tconnectedCallback() {\n\t\t${5}\n\t}\n}"
+  },
+  "Define custom element": {
+    "prefix": "dec",
+    "body": "customElements.define('${1}', ${2})"
+  },
+  "module default export function": {
+    "prefix": "edaf",
+    "body": "export default async function ${1:name} (${2:arguments}) {\n\t${0}\n}"
+  }
+}

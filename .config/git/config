@@ -46,7 +46,8 @@
   lgb = log --graph --decorate --pretty=format:'%C(red)%h%C(reset) —— %C(blue)%an%C(reset): %C(white)%s%C(reset) %Cgreen(%cr)%C(reset) %C(yellow)%d%C(reset)%n' --abbrev-commit --date=relative --branches
   co = checkout
   cob = checkout -b
-	mvb = branch -m
+  mvb = branch -m
+  create-patch = !git --no-pager show
   # the SHA to compare diffs against
   review-base = !git merge-base HEAD \"${review_base:-main}\"
   # list files which have changed since review_base

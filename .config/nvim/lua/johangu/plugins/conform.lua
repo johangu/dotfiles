@@ -15,7 +15,7 @@ return {
 				typescriptreact = { "prettier" },
 				svelte = { "prettier" },
 				html = { "prettier" },
-				go = { "gofmt" },
+				go = { "gofumpt" },
 				css = { { "stylelint", "prettier" } },
 				scss = { { "stylelint", "prettier" } },
 				json = { "prettier" },

@@ -50,7 +50,7 @@ brew bundle --file ./Brewfile
 if [[ -f "$ASDF_DEFAULT_TOOL_VERSIONS_FILENAME" ]]
 then
 	echo "Installing asdf shims"
-	for lang in $(cat "$ASDF_DEFAULT_TOOL_VERSIONS_FILENAME"  | cut -d' ' -f1)
+	for lang in $(cat "$DOTFILES_PATH"/".tools-versions" | cut -d' ' -f1)
 	do
 		echo "Adding and installing $lang"
 		asdf plugin add ${lang}

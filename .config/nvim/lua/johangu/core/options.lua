@@ -1,88 +1,55 @@
--- Config diagnostics
-local signs = {
-	{ name = "Error", text = nil },
-	{ name = "Information", text = nil },
-	{ name = "Info", text = nil },
-	{ name = "Warning", text = nil },
-	{ name = "Warn", text = nil },
-	{ name = "Hint", text = nil },
-}
-for _, sign in ipairs(signs) do
-	vim.fn.sign_define("DiagnosticSign" .. sign.name, {
-		text = sign.text,
-		numhl = "Diagnostic" .. sign.name,
-		linehl = "Diagnostic" .. sign.name,
-	})
-end
+vim.opt.autoindent = true
+vim.opt.backspace = "indent,eol,start"
+vim.opt.breakindent = true
+vim.opt.cmdheight = 1
+vim.opt.colorcolumn = "100"
+vim.opt.completeopt = "menuone,noselect"
+vim.opt.cursorline = true
+vim.opt.emoji = true
+vim.opt.encoding = "utf-8"
+vim.opt.fileencoding = "utf-8"
+vim.opt.hidden = true
+vim.opt.history = 50
+vim.opt.hlsearch = false
+vim.opt.ignorecase = true
+vim.opt.incsearch = true
+vim.opt.laststatus = 2
+vim.opt.lazyredraw = true
+vim.opt.list = true
+vim.opt.listchars = "tab:· ,eol:¬,trail:·,precedes:←,extends:→,nbsp:·"
+vim.opt.matchpairs = "(:),{:},[:],<:>"
+vim.opt.pumheight = 10
+vim.opt.relativenumber = true
+vim.opt.ruler = true
+vim.opt.scrolloff = 15
+vim.opt.secure = true
+vim.opt.shiftwidth = 2
+vim.opt.showcmd = true
+vim.opt.showtabline = 2
+vim.opt.sidescrolloff = 10
+vim.opt.smartcase = true
+vim.opt.smartindent = true
+vim.opt.splitbelow = true
+vim.opt.splitright = true
+vim.opt.softtabstop = 2
+vim.opt.tabstop = 2
+vim.opt.termguicolors = true
+vim.opt.timeout = true
+vim.opt.timeoutlen = 550
+vim.opt.undofile = true
+vim.opt.updatetime = 500
+vim.opt.wildignore = "tags,*.o,*.out,*.obj,.git,*.rbc,*.rbo,*.class,.svn,*.gem,*.pyc,*.swp,*~,*/.DS_Store"
+vim.opt.wildmenu = true
+vim.opt.wildmode = "longest:full,full"
+vim.opt.numberwidth = 3
+vim.opt.wrap = true
 
-vim.diagnostic.config({
-	underline = false,
-	virtual_text = false,
-	signs = true,
-	update_in_insert = true,
-	severity_sort = true,
-})
+-- vim.g.spellfile_URL = "http://vim.mirror.garr.it/pub/vim/"
+vim.opt.spelllang = { "en_gb", "sv", "es", "nl" }
+vim.opt.spell = false
 
-local options = {
-	autoindent = true,
-	backspace = "indent,eol,start",
-	breakindent = true,
-	cmdheight = 1,
-	colorcolumn = "100",
-	completeopt = "menuone,noselect",
-	cursorline = true,
-	emoji = true,
-	encoding = "utf-8",
-	fileencoding = "utf-8",
-	hidden = true,
-	history = 50,
-	hlsearch = false,
-	ignorecase = true,
-	incsearch = true,
-	laststatus = 2,
-	lazyredraw = true,
-	list = true,
-	listchars = "tab:· ,eol:¬,trail:·,precedes:←,extends:→,nbsp:·",
-	matchpairs = "(:),{:},[:],<:>",
-	pumheight = 10,
-	relativenumber = true,
-	ruler = true,
-	scrolloff = 15,
-	secure = true,
-	shiftwidth = 2,
-	showcmd = true,
-	showtabline = 2,
-	sidescrolloff = 10,
-	smartcase = true,
-	smartindent = true,
-	spelllang = "en_gb",
-	splitbelow = true,
-	splitright = true,
-	softtabstop = 2,
-	tabstop = 2,
-	termguicolors = true,
-	timeout = true,
-	timeoutlen = 550,
-	undofile = true,
-	updatetime = 500,
-	wildignore = "tags,*.o,*.out,*.obj,.git,*.rbc,*.rbo,*.class,.svn,*.gem,*.pyc,*.swp,*~,*/.DS_Store",
-	wildmenu = true,
-	wildmode = "longest:full,full",
-	numberwidth = 3,
-	wrap = true,
-}
-
-local windowOptions = {
-	number = true,
-	signcolumn = "yes",
-}
-
-for key, value in pairs(options) do
-	vim.o[key] = value
-end
-for key, value in pairs(windowOptions) do
-	vim.wo[key] = value
-end
+vim.wo.number = true
+vim.wo.signcolumn = "yes"
 
 vim.opt.shortmess:append("c")
 vim.opt.isfname:append("@-@")
@@ -96,15 +63,12 @@ local disabled_built_ins = {
 	"getscriptPlugin",
 	"gzip",
 	"logipat",
-	"netrw",
-	"netrwPlugin",
 	"netrwSettings",
 	"netrwFileHandlers",
 	"matchit",
 	"tar",
 	"tarPlugin",
 	"rrhelper",
-	"spellfile_plugin",
 	"vimball",
 	"vimballPlugin",
 	"zip",

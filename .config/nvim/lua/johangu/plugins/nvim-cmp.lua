@@ -124,6 +124,7 @@ return {
 			{ name = "path" },
 			{ name = "nvim_lua" },
 			{ name = "calc" },
+			{ name = "lazydev", group_index = 0 },
 			{
 				{ name = "buffer", keyword_length = 5 },
 			},

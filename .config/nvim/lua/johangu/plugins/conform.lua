@@ -24,7 +24,8 @@ return {
 				graphql = { "prettier" },
 				lua = { "stylua" },
 				htmldjango = { "djlint" },
-				python = { "isort", "autoflake", "autopep8" },
+				python = { "autopep8", "black" },
+				php = { "ecs" },
 			},
 
 			format_on_save = {

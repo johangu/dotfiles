@@ -6,7 +6,9 @@ return {
 	},
 	cmd = "Copilot",
 	opts = {
-		suggestion = { enabled = false },
+		suggestion = {
+			enabled = false
+		},
 		panel = { enabled = false },
 		filetypes = {
 			help = false,

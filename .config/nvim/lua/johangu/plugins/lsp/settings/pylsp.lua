@@ -1,10 +1,12 @@
 return {
-  pylsp = {
-    plugins = {
-      ruff = { enabled = true },
-      pyflakes = { enabled = false },
-      pylsp_mypy = { enabled = true },
-      pyls_isort = { enabled = true },
-    },
-  },
+	pylsp = {
+		plugins = {
+			ruff = {
+				enabled = true,
+				formatEnabled = true,
+			},
+			black = { enabled = true },
+			pylsp_mypy = { enabled = true, live_mode = true },
+		},
+	},
 }

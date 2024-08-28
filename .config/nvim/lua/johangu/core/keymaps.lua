@@ -1,10 +1,10 @@
 -- Remap for dealing with word wrap
 vim.keymap.set("n", "k", "v:count == 0 ? 'gk' : 'k'", { expr = true, silent = true })
 vim.keymap.set("n", "j", "v:count == 0 ? 'gj' : 'j'", { expr = true, silent = true })
-vim.keymap.set("n", "<M-z>", ":setlocal wrap!<CR>", { silent = true })
+vim.keymap.set("n", "<M-z>", "<cmd>setlocal wrap!<CR>", { silent = true })
 
-vim.keymap.set("n", "<tab>", ":bnext<CR>", { silent = true })
-vim.keymap.set("n", "<s-tab>", ":bprevious<CR>", { silent = true })
+vim.keymap.set("n", "<tab>", "<cmd>bnext<CR>", { silent = true })
+vim.keymap.set("n", "<s-tab>", "<cmd>bprevious<CR>", { silent = true })
 vim.keymap.set("n", "<leader>q", function()
 	local count = 0
 	for i = 1, vim.fn.bufnr("$"), 1 do
@@ -19,24 +19,29 @@ vim.keymap.set("n", "<leader>q", function()
 		vim.cmd("quit")
 	end
 end, { silent = true, desc = "[Q]uit current buffer" })
-vim.keymap.set("n", "<leader>vn", ":vnew<CR>", { silent = true, desc = "[N]ew buffer in [V]ertical split" })
-vim.keymap.set("n", "<leader>hn", ":split<CR>", { silent = true })
-vim.keymap.set("n", "<leader>l", ":setlocal list!<CR>", { silent = true })
+vim.keymap.set("n", "<leader>vn", "<cmd>vnew<CR>", { silent = true, desc = "[N]ew buffer in [V]ertical split" })
+vim.keymap.set("n", "<leader>hn", "<cmd>split<CR>", { silent = true })
 vim.keymap.set("n", "<space>", "za", { silent = true })
+vim.keymap.set(
+	"n",
+	"<leader>cf",
+	"<cmd>setlocal list! | setlocal wrap! | setlocal number! | setlocal relativenumber! | Gitsign toggle_signs<CR>",
+	{ silent = true, desc = "Toggle [C]opy [F]riedly" }
+)
 
 -- use tab to indent in visual mode
 vim.keymap.set("v", "<tab>", ">gv", { silent = true })
 vim.keymap.set("v", "<s-tab>", "<gv", { silent = true })
 
 -- Resize with arrow keys
-vim.keymap.set("n", "<C-S-Up>", ":resize -2<CR>", { silent = true })
-vim.keymap.set("n", "<C-S-Down>", ":resize +2<CR>", { silent = true })
-vim.keymap.set("n", "<C-S-Left>", ":vertical resize -2<CR>", { silent = true })
-vim.keymap.set("n", "<C-S-Right>", ":vertical resize +2<CR>", { silent = true })
+vim.keymap.set("n", "<C-S-Up>", "<cmd>resize -2<CR>", { silent = true })
+vim.keymap.set("n", "<C-S-Down>", "<cmd>resize +2<CR>", { silent = true })
+vim.keymap.set("n", "<C-S-Left>", "<cmd>vertical resize -2<CR>", { silent = true })
+vim.keymap.set("n", "<C-S-Right>", "<cmd>vertical resize +2<CR>", { silent = true })
 
 -- Move text up and down
-vim.keymap.set("n", "<A-j>", ":move .+1<CR>==", { silent = true })
-vim.keymap.set("n", "<A-k>", ":move .-2<CR>==", { silent = true })
+vim.keymap.set("n", "<A-j>", "<cmd>move .+1<CR>==", { silent = true })
+vim.keymap.set("n", "<A-k>", "<cmd>move .-2<CR>==", { silent = true })
 vim.keymap.set("v", "<A-j>", ":move '>+1<CR>gv=gv", { silent = true })
 vim.keymap.set("v", "<A-k>", ":move '<-2<CR>gv=gv", { silent = true })
 vim.keymap.set("x", "<A-j>", ":move '>+1<CR>gv=gv", { silent = true })
@@ -60,8 +65,12 @@ vim.keymap.set("n", "<C-u>", "<C-u>zz")
 vim.keymap.set("n", "n", "nzzzv")
 vim.keymap.set("n", "N", "Nzzzv")
 
--- Diagnostic keymaps
-vim.keymap.set("n", "[d", vim.diagnostic.goto_prev, { desc = "Go to previous diagnostic message" })
-vim.keymap.set("n", "]d", vim.diagnostic.goto_next, { desc = "Go to next diagnostic message" })
-vim.keymap.set("n", "<leader>[", vim.diagnostic.open_float, { desc = "Open floating diagnostic message" })
-vim.keymap.set("n", "<leader>]", vim.diagnostic.setloclist, { desc = "Open diagnostics list" })
+vim.keymap.set("n", "<leader>z", "<cmd>set spell!<CR>", { desc = "Toggle spell check" })
+
+-- Jump around quickfix entries
+vim.keymap.set("n", "[c", "<cmd>cprev<CR>", { desc = "Previous quickfix item" })
+vim.keymap.set("n", "]c", "<cmd>cnext<CR>", { desc = "Next quickfix item" })
+
+-- Open terminal splits
+vim.keymap.set("n", "<leader>Tsv", ":vsp term://", { desc = "Open vertical terminal split" })
+vim.keymap.set("n", "<leader>Tsh", ":sp term://", { desc = "Open horizontal terminal split" })

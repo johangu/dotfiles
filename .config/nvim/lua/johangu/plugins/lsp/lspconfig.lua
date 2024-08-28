@@ -3,41 +3,101 @@ return {
 	dependencies = {
 		{
 			"williamboman/mason.nvim",
-			config = true,
 			opts = {
-				ensure_installed = {
-					"eslint-lsp",
-					"lua-language-server",
-					"typescript-language-server",
-					"python-lsp-server",
-					"css-lsp",
-					"emmet-language-server",
-					"gopls",
+				ui = {
+					icons = {
+						package_installed = "✓",
+						package_pending = "➜",
+						package_uninstalled = "✗",
+					},
 				},
 			},
+			config = true,
 			automatic_installation = true,
 		},
-		"williamboman/mason.nvim",
-		"williamboman/mason-lspconfig.nvim",
+		{
+			"williamboman/mason-lspconfig.nvim",
+			dependencies = { "nvim-lua/plenary.nvim", "williamboman/mason.nvim" },
+			opts = {
+				ensure_installed = {
+					"eslint",
+					"tsserver",
+					"cssls",
+					"emmet_language_server",
+					"gopls",
+					"templ",
+					"pylsp",
+					"ruff",
+					"lua_ls",
+				},
+			},
+			config = function(_, opts)
+				require("mason-lspconfig").setup(opts)
+				local pylsp = require("mason-registry").get_package("python-lsp-server")
+
+				pylsp:on("install:success", function()
+					local function mason_package_path(package)
+						local path = vim.fn.resolve(vim.fn.stdpath("data") .. "/mason/packages/" .. package)
+						return path
+					end
+
+					local path = mason_package_path("python-lsp-server")
+					local command = path .. "/venv/bin/pip"
+					local plugins = { "python-lsp-black", "python-lsp-ruff", "pylsp-mypy" }
+					for _, plugin in pairs(plugins) do
+						local args = {
+							"install",
+							"-U",
+							plugin,
+						}
+
+						vim.schedule(function()
+							require("plenary.job")
+								:new({
+									command = command,
+									args = args,
+									cwd = path,
+								})
+								:start()
+							vim.notify(
+								"[mason-lspconfig.nvim:user] " .. plugin .. " installed",
+								vim.log.levels.INFO,
+								{ title = "Mason.nvim" }
+							)
+						end)
+					end
+				end)
+			end,
+		},
 		{
 			"j-hui/fidget.nvim",
-			tag = "legacy",
 			opts = {
-				event = { "LspAttach" },
-				text = { spinner = "dots" },
-				window = {
-					blend = 0,
+				integration = {
+					["nvim-tree"] = { enable = true },
+				},
+				progress = {
+					display = {
+						progress_icon = {
+							pattern = "arc",
+							period = 1,
+						},
+					},
+				},
+				notification = {
+					window = {
+						winblend = 0,
+					},
 				},
 			},
 		},
 		{
-			"folke/neodev.nvim",
+			"folke/lazydev.nvim",
+			ft = "lua",
 			opts = {
 				library = {
-					plugins = {
-						"neotest",
-					},
-					types = true,
+					{ path = "luvit-meta/library", words = { "vim%.uv" } },
+					{ path = "LazyVim", words = { "LazyVim" } },
+					"neotest",
 				},
 			}, -- make sure setup is run
 		},
@@ -68,6 +128,8 @@ return {
 
 			nmap("<leader>rn", vim.lsp.buf.rename, "[R]e[n]ame")
 			nmap("<leader>ca", vim.lsp.buf.code_action, "[C]ode [A]ction")
+
+			nmap("<leader>lh", vim.lsp.inlay_hint.enable, "[L]SP Inlay [H]ints")
 
 			nmap("gd", vim.lsp.buf.definition, "[G]oto [D]efinition")
 			nmap("gr", require("telescope.builtin").lsp_references, "[G]oto [R]eferences")

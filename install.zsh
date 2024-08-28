@@ -3,6 +3,7 @@ DOTFILES_PATH=${0:a:h}
 cd "$DOTFILES_PATH"
 FILES_TO_LINK=(
 	.zshrc
+	.tool-versions
 	$(ls -d .config/*)
 )
 

@@ -38,7 +38,7 @@ export GPG_TTY=$(tty)
 # asdf-vm
 ################################################################################
 export ASDF_CONFIG_FILE="$XDG_CONFIG_HOME/asdf/config"
-export ASDF_DEFAULT_TOOL_VERSIONS_FILENAME="$XDG_CONFIG_HOME/asdf/tool-versions"
+# export ASDF_DEFAULT_TOOL_VERSIONS_FILENAME="$XDG_CONFIG_HOME/asdf/tool-versions"
 export ASDF_DATA_DIR="$XDG_DATA_HOME/asdf"
 export ASDF_GOLANG_MOD_VERSION_ENABLED=true
 source $(brew --prefix asdf)/libexec/asdf.sh

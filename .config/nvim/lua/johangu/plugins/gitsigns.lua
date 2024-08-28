@@ -1,3 +1,19 @@
+-- vim.api.nvim_set_hl(0, "GitSignsAdd", { link = "GitSignsAdd" })
+-- vim.api.nvim_set_hl(0, "GitSignsAddLn", { link = "GitSignsAddLn" })
+-- vim.api.nvim_set_hl(0, "GitSignsAddNr", { link = "GitSignsAddNr" })
+-- vim.api.nvim_set_hl(0, "GitSignsChange", { link = "GitSignsChange" })
+-- vim.api.nvim_set_hl(0, "GitSignsChangeLn", { link = "GitSignsChangeLn" })
+-- vim.api.nvim_set_hl(0, "GitSignsChangeNr", { link = "GitSignsChangeNr" })
+-- vim.api.nvim_set_hl(0, "GitSignsChangedelete", { link = "GitSignsChange" })
+-- vim.api.nvim_set_hl(0, "GitSignsChangedeleteLn", { link = "GitSignsChangeLn" })
+-- vim.api.nvim_set_hl(0, "GitSignsChangedeleteNr", { link = "GitSignsChangeNr" })
+-- vim.api.nvim_set_hl(0, "GitSignsDelete", { link = "GitSignsDelete" })
+-- vim.api.nvim_set_hl(0, "GitSignsDeleteLn", { link = "GitSignsDeleteLn" })
+-- vim.api.nvim_set_hl(0, "GitSignsDeleteNr", { link = "GitSignsDeleteNr" })
+-- vim.api.nvim_set_hl(0, "GitSignsTopdelete", { link = "GitSignsDelete" })
+-- vim.api.nvim_set_hl(0, "GitSignsTopdeleteLn", { link = "GitSignsDeleteLn" })
+-- vim.api.nvim_set_hl(0, "GitSignsTopdeleteNr", { link = "GitSignsDeleteNr" })
+
 return {
 	"lewis6991/gitsigns.nvim",
 	dependencies = { "nvim-lua/plenary.nvim" },
@@ -56,39 +72,14 @@ return {
 				nmap("<leader>tb", require("gitsigns").toggle_current_line_blame, "[T]oggle [B]lame on current line")
 				nmap("<leader>td", require("gitsigns").toggle_deleted, "[T]oggle [D]eleted")
 			end,
-			signcolumn = true,
 			signs = {
-				add = {
-					hl = "GitSignsAdd",
-					text = "│",
-					numhl = "GitSignsAddNr",
-					linehl = "GitSignsAddLn",
-				},
-				change = {
-					hl = "GitSignsChange",
-					text = "│",
-					numhl = "GitSignsChangeNr",
-					linehl = "GitSignsChangeLn",
-				},
-				delete = {
-					hl = "GitSignsDelete",
-					text = "_",
-					numhl = "GitSignsDeleteNr",
-					linehl = "GitSignsDeleteLn",
-				},
-				topdelete = {
-					hl = "GitSignsDelete",
-					text = "‾",
-					numhl = "GitSignsDeleteNr",
-					linehl = "GitSignsDeleteLn",
-				},
-				changedelete = {
-					hl = "GitSignsChange",
-					text = "~",
-					numhl = "GitSignsChangeNr",
-					linehl = "GitSignsChangeLn",
-				},
+				add = { text = "│" },
+				change = { text = "│" },
+				delete = { text = "_" },
+				topdelete = { text = "‾" },
+				changedelete = { text = "~" },
 			},
+			signcolumn = true,
 			numhl = false,
 			linehl = false,
 			watch_gitdir = { interval = 1000 },
@@ -99,7 +90,7 @@ return {
 				delay = 350,
 				ignore_whitespace = true,
 			},
-			current_line_blame_formatter_opts = { relative_time = false },
+			current_line_blame_formatter = "<author>, <author_time> - <summary>", -- :%R for relative time
 			sign_priority = 6,
 			update_debounce = 100,
 			status_formatter = nil, -- Use default

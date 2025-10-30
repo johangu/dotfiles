@@ -1,20 +1,26 @@
 return {
+	-- "tpope/vim-sleuth",
 	{
-		"turbio/bracey.vim",
-		event = "VeryLazy",
-		ft = { "html" },
-		build = { "npm install --prefix server" },
+		"tpope/vim-speeddating",
+		keys = { "<C-a>", "<C-x>" },
 	},
-	"tpope/vim-sleuth",
-	"tpope/vim-speeddating",
-	"jiangmiao/auto-pairs",
 	{
 		"b0o/schemastore.nvim",
-		ft = { "json" },
+		lazy = true,
 	},
 	{
 		"m4xshen/hardtime.nvim",
-		dependencies = { "MunifTanjim/nui.nvim", "nvim-lua/plenary.nvim" },
-		opts = {},
+		dependencies = { "MunifTanjim/nui.nvim" },
+		opts = {
+			disabled_filetypes = { "qf", "netrw", "NvimTree", "lazy", "mason", "dbui" },
+		},
+	},
+	{
+		"L3MON4D3/LuaSnip",
+		lazy = true,
+	},
+	{
+		"rafamadriz/friendly-snippets",
+		lazy = true,
 	},
 }

@@ -1,9 +1,8 @@
 return {
 	"hoob3rt/lualine.nvim",
-	dependencies = {
-		"kyazdani42/nvim-web-devicons",
-		"AndreM222/copilot-lualine",
-	},
+	-- dependencies = {
+	-- 	"AndreM222/copilot-lualine",
+	-- },
 	config = function()
 		local palette = require("catppuccin.palettes").get_palette()
 		local diagnostics = {

@@ -1,15 +1,12 @@
 return {
 	"zbirenbaum/copilot.lua",
-	dependencies = {
-		"zbirenbaum/copilot-cmp",
-		config = true,
-	},
 	cmd = "Copilot",
 	opts = {
 		suggestion = {
-			enabled = false
+			enabled = true,
+			auto_trigger = false,
 		},
-		panel = { enabled = false },
+		-- panel = { enabled = false },
 		filetypes = {
 			help = false,
 			gitcommit = false,

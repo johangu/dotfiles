@@ -1,5 +1,5 @@
 return {
 	"kylechui/nvim-surround",
-	event = "VeryLazy",
+	keys = { "ds", "cs", "ys", { "S", nil, mode = "v" } },
 	config = true,
 }

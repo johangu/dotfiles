@@ -1,8 +1,8 @@
 return {
-  'code-biscuits/nvim-biscuits',
-  dependencies = 'nvim-treesitter/nvim-treesitter',
-  opts = {
-    cursor_line_only = true,
-    -- on_events = { 'InsertLeave', 'CursorHoldI' }
-  }
+	"code-biscuits/nvim-biscuits",
+	event = "VeryLazy",
+	opts = {
+		cursor_line_only = true,
+		-- on_events = { 'InsertLeave', 'CursorHoldI' }
+	},
 }

@@ -9,7 +9,7 @@ return {
 				return { BiscuitColor = { fg = colors.overlay0 } }
 			end,
 			integrations = {
-				cmp = true,
+				blink_cmp = true,
 				dap = true,
 				dap_ui = true,
 				fidget = true,
@@ -17,6 +17,7 @@ return {
 				headlines = true,
 				indent_blankline = {
 					colored_indent_levels = true,
+					scope_color = "lavender",
 					enabled = true,
 				},
 				mason = true,
@@ -40,11 +41,11 @@ return {
 				},
 				neotest = true,
 				nvimtree = true,
+				rainbow_delimiters = true,
 				telescope = {
 					enabled = true,
 				},
 				treesitter = true,
-				ts_rainbow = true,
 				which_key = true,
 			},
 		})

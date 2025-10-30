@@ -3,10 +3,11 @@ return {
 		"nvim-neotest/neotest",
 		dependencies = {
 			"antoinemadec/FixCursorHold.nvim",
-			"nvim-lua/plenary.nvim",
+			"nvim-neotest/nvim-nio",
 			"nvim-neotest/neotest-go",
 			"nvim-neotest/neotest-python",
-			{ "nvim-neotest/neotest-jest", commit = "c211844" },
+			"nvim-neotest/neotest-jest",
+			"rcasia/neotest-java",
 			"nvim-treesitter/nvim-treesitter",
 		},
 		opts = {
@@ -20,13 +21,14 @@ return {
 					},
 				},
 				["neotest-go"] = {},
-				--[[ ["neotest-jest"] = {
+				["neotest-jest"] = {
 					jestCommand = "npm test --",
 					jestConfigFile = "jest.config.js",
 					cwd = function()
 						return vim.fn.getcwd()
 					end,
-				}, ]]
+				},
+				["neotest-java"] = {},
 			},
 			output = { open_on_run = false, enabled = true },
 		},

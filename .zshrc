@@ -7,16 +7,6 @@ export XDG_STATE_HOME="${XDG_LOCAL_STATE:-$HOME/.local/state}"
 export LESSHISTFILE="${XDG_CONFIG_HOME}/less/history"
 export LESSKEY="${XDG_CONFIG_HOME}/less/keys"
 
-path=(
-    "./node_modules/.bin"
-    "$XDG_LOCAL_HOME/bin/node_modules/bin"
-    "$XDG_LOCAL_HOME/bin"
-    "$HOME/bin"
-    "/usr/local/bin"
-    $path
-  )
-export PATH
-
 ################################################################################
 # Homebrew
 ################################################################################
@@ -116,3 +106,15 @@ else
 fi
 export VISUAL=$EDITOR
 export GIT_EDITOR=$EDITOR
+
+
+path=(
+    "./node_modules/.bin"
+    "$XDG_LOCAL_HOME/bin/node_modules/bin"
+    "$XDG_LOCAL_HOME/bin"
+    "$HOME/bin"
+    "/usr/local/bin"
+		"/opt/homebrew/opt/gawk/libexec/gnubin"
+    $path
+  )
+export PATH

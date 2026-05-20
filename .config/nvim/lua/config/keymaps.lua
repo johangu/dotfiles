@@ -1,4 +1,4 @@
-local utils = require("johangu.utils")
+local utils = require("utils")
 
 vim.keymap.set("n", "<leader>k", ":Explore<CR>", { silent = true })
 

@@ -81,24 +81,26 @@ return {
 				end
 			end
 
-			mason_lspconfig.setup({})
-			mason_lspconfig.setup_handlers({
-				function(server_name)
-					local capabilities = vim.lsp.protocol.make_client_capabilities()
-					capabilities = require("blink.cmp").get_lsp_capabilities(capabilities)
+			mason_lspconfig.setup({
+				handlers = {
+					function(server_name)
+						local capabilities = vim.lsp.protocol.make_client_capabilities()
+						capabilities = require("blink.cmp").get_lsp_capabilities(capabilities)
 
-					local opts = {
-						capabilities = capabilities,
-						on_init = on_init,
-					}
+						local opts = {
+							capabilities = capabilities,
+							on_init = on_init,
+						}
 
-					local server_status_ok, server_opts = pcall(require, "johangu.plugins.lsp.settings." .. server_name)
-					if server_status_ok then
-						opts = vim.tbl_extend("force", server_opts, opts)
-					end
+						local server_status_ok, server_opts =
+							pcall(require, "johangu.plugins.lsp.settings." .. server_name)
+						if server_status_ok then
+							opts = vim.tbl_extend("force", server_opts, opts)
+						end
 
-					lspconfig[server_name].setup(opts)
-				end,
+						lspconfig[server_name].setup(opts)
+					end,
+				},
 			})
 		end,
 	},

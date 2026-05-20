@@ -11,7 +11,7 @@ return {
 					preselect = false,
 				},
 			},
-			menu = { auto_show = false },
+			menu = { auto_show = true },
 		},
 		sources = {
 			-- `lsp`, `buffer`, `snippets`, `path` and `omni` are built-in

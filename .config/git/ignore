@@ -27,3 +27,5 @@ Temporary Items
 # vimdiff files
 *.orig
 
+
+**/.claude/settings.local.json
